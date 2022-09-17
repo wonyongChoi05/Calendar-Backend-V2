@@ -5,17 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "engagements")
-public class Engagement {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Engagement extends BaseEntity {
 
     @JoinColumn(name = "schedule_id")
     @ManyToOne
@@ -28,5 +23,4 @@ public class Engagement {
     @Enumerated(EnumType.STRING)
     private RequestStatus status; // 초대 수락/거부 상태
 
-    private LocalDateTime createdAt = LocalDateTime.now();
 }
