@@ -1,11 +1,11 @@
 package com.calendar.core.domain.entity;
 
+import com.calendar.core.util.Encryptor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -22,6 +22,10 @@ public class User extends BaseEntity {
         this.email = email;
         this.password = password;
         this.birthday = birthday;
+    }
+
+    public boolean isMatch(Encryptor encryptor, String password) {
+        return encryptor.isMatch(password, this.password);
     }
 
 }
