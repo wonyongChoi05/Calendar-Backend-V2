@@ -14,27 +14,27 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final Encryptor encryptor;
-
+    Encryptor bcryptEncryptor;
     private final UserRepository userRepository;
 
     @Transactional
-    public User create(UserCreateReq userCreateReq) {
-        if (userRepository.findByEmail(userCreateReq.getEmail()).isPresent()) {
-            throw new RuntimeException("user already existed");
-        }
-
-        return userRepository.save(new User(
-                userCreateReq.getName(),
-                userCreateReq.getEmail(),
-                encryptor.encrypt(userCreateReq.getPassword()),
-                userCreateReq.getBirthday()
-        ));
+    public User create(UserCreateReq req) {
+        userRepository.findByEmail(req.getEmail())
+                .ifPresent(u -> {
+                    throw new RuntimeException("cannot find user");
+                });
+        return userRepository.save(User.builder()
+                .name(req.getName())
+                .password(bcryptEncryptor.encrypt(req.getPassword()))
+                .email(req.getEmail())
+                .birthday(req.getBirthday())
+                .build());
     }
 
     @Transactional
     public Optional<User> findPwMatchUser(String email, String password) {
         return userRepository.findByEmail(email)
-                .map(user -> user.isMatch(encryptor, password) ? user : null);
+                .map(u -> u.isMatched(bcryptEncryptor, password) ? u : null);
     }
 }
+

@@ -2,8 +2,7 @@ package com.calendar.core.util;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-public class BCryptEncryptor implements Encryptor{
-
+public class BCryptEncryptor implements Encryptor {
     @Override
     public String encrypt(String origin) {
         return BCrypt.hashpw(origin, BCrypt.gensalt());
@@ -13,7 +12,7 @@ public class BCryptEncryptor implements Encryptor{
     public boolean isMatch(String origin, String hashed) {
         try {
             return BCrypt.checkpw(origin, hashed);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
